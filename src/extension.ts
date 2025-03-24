@@ -129,41 +129,45 @@ export function activate(context: vscode.ExtensionContext) {
 
   const viewNoteCommandHandle = vscode.commands.registerCommand(
     'moment.viewDailyNote',
-    () => {
-      const folderPath = vscode.workspace
-        .getConfiguration('moment')
-        .get('dailyNotesPath') as string | undefined;
-
-      if (!folderPath) {
-        vscode.window.showErrorMessage('Daily notes path is not set!');
-        return;
-      }
-
-      const { formattedDate, fileName } = generateFormattedDateAndFileName();
-
-      vscode.workspace
-        .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
-        .then(
-          (doc) => {
-            vscode.window.showTextDocument(doc).then(
-              () => {
-                vscode.window.showInformationMessage(
-                  `Viewing daily note for ${formattedDate}`
-                );
-              },
-              (err) => {
-                vscode.window.showErrorMessage(err.message);
-              }
-            );
-          },
-          (err) => {
-            vscode.window.showErrorMessage(err.message);
-          }
-        );
-    }
+    openDailyNote()
   );
 
   context.subscriptions.push(viewNoteCommandHandle);
+}
+
+function openDailyNote(): (...args: any[]) => any {
+  return () => {
+    const folderPath = vscode.workspace
+      .getConfiguration('moment')
+      .get('dailyNotesPath') as string | undefined;
+
+    if (!folderPath) {
+      vscode.window.showErrorMessage('Daily notes path is not set!');
+      return;
+    }
+
+    const { formattedDate, fileName } = generateFormattedDateAndFileName();
+
+    vscode.workspace
+      .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
+      .then(
+        (doc) => {
+          vscode.window.showTextDocument(doc).then(
+            () => {
+              vscode.window.showInformationMessage(
+                `Viewing daily note for ${formattedDate}`
+              );
+            },
+            (err) => {
+              vscode.window.showErrorMessage(err.message);
+            }
+          );
+        },
+        (err) => {
+          vscode.window.showErrorMessage(err.message);
+        }
+      );
+  };
 }
 
 // This method is called when your extension is deactivated
