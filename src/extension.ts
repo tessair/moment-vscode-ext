@@ -12,47 +12,116 @@ export function activate(context: vscode.ExtensionContext) {
   const createNoteCommandHandle = vscode.commands.registerCommand(
     'moment.createDailyNote',
     () => {
-      // const folderPath = vscode.workspace
-      //   .getConfiguration('moment')
-      //   .get('dailyNotesFolder');
-      // if (!folderPath) {
-      //   vscode.window.showErrorMessage('Daily notes folder not set!');
-      //   return;
-      // }
-
-      // create a new .md file that will have as name the current date in the format DD-MM-YYYY
-      const { formattedDate, fileName } = generateFormattedDateAndFileName();
-
-      // read the daily note template from the extension configuration
-
-      const fileContent = vscode.workspace
+      let folderPath = vscode.workspace
         .getConfiguration('moment')
-        .get('dailyNoteTemplate') as string;
+        .get('dailyNotesPath') as string | undefined;
 
-      if (!fileContent) {
-        vscode.window.showErrorMessage('Daily note template is not set!');
-        return;
-      }
+      if (!folderPath) {
+        // get the current workspace folder path
+        folderPath = vscode.workspace.workspaceFolders
+          ? vscode.workspace.workspaceFolders[0].uri.path
+          : '';
+        vscode.window
+          .showInputBox({
+            prompt: 'Enter the folder path where you want to save the file',
+            value: folderPath,
+          })
+          .then((folderPathInput) => {
+            if (folderPathInput) {
+              folderPath = folderPathInput;
 
-      // append a new line at the beginning of the file with the current date
-      const dateLine = `# Daily note: ${formattedDate}\n\n`;
+              // update the configuration with the new folder path
+              vscode.workspace
+                .getConfiguration('moment')
+                .update('dailyNotesPath', folderPath, true)
+                .then(
+                  () => {
+                    const { formattedDate, fileName } =
+                      generateFormattedDateAndFileName();
 
-      const fileContentWithDate = dateLine + fileContent;
+                    const fileContent = vscode.workspace
+                      .getConfiguration('moment')
+                      .get('dailyNoteTemplate') as string;
 
-      vscode.workspace
-        .openTextDocument(vscode.Uri.parse(`untitled:${fileName}`))
-        .then((doc) => {
-          vscode.window.showTextDocument(doc).then(() => {
-            vscode.window.showInformationMessage('Daily note created!');
+                    if (!fileContent) {
+                      vscode.window.showErrorMessage(
+                        'Daily note template is not set!'
+                      );
+                      return;
+                    }
 
-            vscode.window.activeTextEditor?.edit((editBuilder) => {
-              editBuilder.insert(
-                new vscode.Position(0, 0),
-                fileContentWithDate
-              );
-            });
+                    // append a new line at the beginning of the file with the current date
+                    const dateLine = `# Daily note: ${formattedDate}\n\n`;
+
+                    const fileContentWithDate = dateLine + fileContent;
+
+                    // create the file
+                    vscode.workspace.fs.writeFile(
+                      vscode.Uri.parse(`${folderPath}/${fileName}`),
+                      new TextEncoder().encode(fileContentWithDate)
+                    );
+
+                    vscode.workspace
+                      .openTextDocument(
+                        vscode.Uri.parse(`${folderPath}/${fileName}`)
+                      )
+                      .then((doc) => {
+                        vscode.window.showTextDocument(doc).then(
+                          () => {
+                            vscode.window.showInformationMessage(
+                              `Daily note created successfully!`
+                            );
+                          },
+                          (err) => {
+                            vscode.window.showErrorMessage(err.message);
+                          }
+                        );
+                      });
+                  },
+                  (err) => {
+                    vscode.window.showErrorMessage(err.message);
+                  }
+                );
+            }
           });
-        });
+      } else {
+        const { formattedDate, fileName } = generateFormattedDateAndFileName();
+
+        const fileContent = vscode.workspace
+          .getConfiguration('moment')
+          .get('dailyNoteTemplate') as string;
+
+        if (!fileContent) {
+          vscode.window.showErrorMessage('Daily note template is not set!');
+          return;
+        }
+
+        // append a new line at the beginning of the file with the current date
+        const dateLine = `# Daily note: ${formattedDate}\n\n`;
+
+        const fileContentWithDate = dateLine + fileContent;
+
+        // create the file
+        vscode.workspace.fs.writeFile(
+          vscode.Uri.parse(`${folderPath}/${fileName}`),
+          new TextEncoder().encode(fileContentWithDate)
+        );
+
+        vscode.workspace
+          .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
+          .then((doc) => {
+            vscode.window.showTextDocument(doc).then(
+              () => {
+                vscode.window.showInformationMessage(
+                  `Daily note created successfully!`
+                );
+              },
+              (err) => {
+                vscode.window.showErrorMessage(err.message);
+              }
+            );
+          });
+      }
     }
   );
 
