@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { generateFormattedDateAndFileName } from './utils';
-import { openDailyNote } from './functions';
+import { createDailyNote, openDailyNote } from './functions';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -86,42 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
           });
       } else {
-        const { formattedDate, fileName } = generateFormattedDateAndFileName();
-
-        const fileContent = vscode.workspace
-          .getConfiguration('moment')
-          .get('dailyNoteTemplate') as string;
-
-        if (!fileContent) {
-          vscode.window.showErrorMessage('Daily note template is not set!');
-          return;
-        }
-
-        // append a new line at the beginning of the file with the current date
-        const dateLine = `# Daily note: ${formattedDate}\n\n`;
-
-        const fileContentWithDate = dateLine + fileContent;
-
-        // create the file
-        vscode.workspace.fs.writeFile(
-          vscode.Uri.parse(`${folderPath}/${fileName}`),
-          new TextEncoder().encode(fileContentWithDate)
-        );
-
-        vscode.workspace
-          .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
-          .then((doc) => {
-            vscode.window.showTextDocument(doc).then(
-              () => {
-                vscode.window.showInformationMessage(
-                  `Daily note created successfully!`
-                );
-              },
-              (err) => {
-                vscode.window.showErrorMessage(err.message);
-              }
-            );
-          });
+        createDailyNote(folderPath);
       }
     }
   );

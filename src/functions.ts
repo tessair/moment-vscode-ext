@@ -49,3 +49,61 @@ export function openDailyNote(): (...args: any[]) => any {
       );
   };
 }
+
+/**
+ * Creates a daily note file in the specified folder path using a template.
+ *
+ * The function generates a formatted date and file name, retrieves the daily note
+ * template from the VS Code workspace configuration, and prepends the current date
+ * as a header to the template content. It then creates the file in the specified
+ * folder, writes the content to it, and opens the file in the editor.
+ *
+ * @param folderPath - The absolute path to the folder where the daily note file will be created.
+ *
+ * @remarks
+ * - The daily note template is retrieved from the `moment.dailyNoteTemplate` configuration.
+ * - If the template is not set, an error message is displayed to the user.
+ * - The file is named based on the generated formatted date and file name.
+ * - The function uses the VS Code API to create, write, and open the file.
+ *
+ * @throws Will display an error message if the daily note template is not set or if
+ * there is an issue opening the created file in the editor.
+ */
+export function createDailyNote(folderPath: string) {
+  const { formattedDate, fileName } = generateFormattedDateAndFileName();
+
+  const fileContent = vscode.workspace
+    .getConfiguration('moment')
+    .get('dailyNoteTemplate') as string;
+
+  if (!fileContent) {
+    vscode.window.showErrorMessage('Daily note template is not set!');
+    return;
+  }
+
+  // append a new line at the beginning of the file with the current date
+  const dateLine = `# Daily note: ${formattedDate}\n\n`;
+
+  const fileContentWithDate = dateLine + fileContent;
+
+  // create the file
+  vscode.workspace.fs.writeFile(
+    vscode.Uri.parse(`${folderPath}/${fileName}`),
+    new TextEncoder().encode(fileContentWithDate)
+  );
+
+  vscode.workspace
+    .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
+    .then((doc) => {
+      vscode.window.showTextDocument(doc).then(
+        () => {
+          vscode.window.showInformationMessage(
+            `Daily note created successfully!`
+          );
+        },
+        (err) => {
+          vscode.window.showErrorMessage(err.message);
+        }
+      );
+    });
+}
