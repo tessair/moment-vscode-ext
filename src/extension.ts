@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { generateFormattedDateAndFileName } from './utils';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -68,15 +69,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(viewNoteCommandHandle);
-}
-
-function generateFormattedDateAndFileName() {
-  const date = new Date();
-  const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(
-    date.getMonth() + 1
-  ).padStart(2, '0')}-${date.getFullYear()}`;
-  const fileName = `${formattedDate}.md`;
-  return { formattedDate, fileName };
 }
 
 // This method is called when your extension is deactivated
