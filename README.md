@@ -24,8 +24,9 @@ For example:
 
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `moment.enable`: Enable/disable this extension.
+* `moment.dailyNoteTemplate`: Template for daily notes.
+* `moment.dailyNotesPath`: Specifies the folder path containing the daily notes.
 
 ## Known Issues
 
@@ -67,5 +68,29 @@ You can author your README using Visual Studio Code. Here are some useful editor
 
 * [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
 * [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+
+## Build and Package
+
+To build and package the extension using the 'vsce' tool, follow these steps:
+
+1. Install dependencies:
+   ```sh
+   npm install
+   ```
+
+2. Compile the extension:
+   ```sh
+   npm run compile
+   ```
+
+3. Package the extension:
+   ```sh
+   vsce package
+   ```
+
+4. Publish the extension (requires authentication):
+   ```sh
+   vsce publish
+   ```
 
 **Enjoy!**
