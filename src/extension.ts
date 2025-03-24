@@ -38,6 +38,11 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
+      // append a new line at the beginning of the file with the current date
+      const dateLine = `# Daily note: ${formattedDate}\n\n`;
+
+      const fileContentWithDate = dateLine + fileContent;
+
       vscode.workspace
         .openTextDocument(vscode.Uri.parse(`untitled:${fileName}`))
         .then((doc) => {
@@ -45,7 +50,10 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage('Daily note created!');
 
             vscode.window.activeTextEditor?.edit((editBuilder) => {
-              editBuilder.insert(new vscode.Position(0, 0), fileContent);
+              editBuilder.insert(
+                new vscode.Position(0, 0),
+                fileContentWithDate
+              );
             });
           });
         });

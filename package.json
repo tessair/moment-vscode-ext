@@ -28,7 +28,7 @@
         "moment.dailyNoteTemplate": {
           "type": "string",
           "editPresentation": "multilineText",
-          "default": "# Tasks\n\nQuick tasks for today:\n- [ ] Task 1\n\n# Things Learned\n\nKey learnings and insights from today:\n- \n\n# Problems Encountered\n\nChallenges and issues faced:\n- \n",
+          "default": "## Tasks\n\nQuick tasks for today:\n\n- [ ] Task 1\n\n## Things Learned\n\nKey learnings and insights from today:\n\n- \n\n## Problems Encountered\n\nChallenges and issues faced:\n\n- \n",
           "description": "Template for daily notes."
         },
         "moment.dailyNotesPath": {
