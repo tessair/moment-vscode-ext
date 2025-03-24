@@ -130,10 +130,39 @@ export function activate(context: vscode.ExtensionContext) {
   const viewNoteCommandHandle = vscode.commands.registerCommand(
     'moment.viewDailyNote',
     () => {
-      // The code you place here will
-      // be
-      // executed every time your command is executed
-      vscode.window.showInformationMessage('View Daily Note!');
+      // get the folder path from the configuration
+      const folderPath = vscode.workspace
+
+        .getConfiguration('moment')
+        .get('dailyNotesPath') as string | undefined;
+
+      if (!folderPath) {
+        vscode.window.showErrorMessage('Daily notes path is not set!');
+        return;
+      }
+
+      const { formattedDate, fileName } = generateFormattedDateAndFileName();
+
+      // open the file
+      vscode.workspace
+        .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
+        .then(
+          (doc) => {
+            vscode.window.showTextDocument(doc).then(
+              () => {
+                vscode.window.showInformationMessage(
+                  `Viewing daily note for ${formattedDate}`
+                );
+              },
+              (err) => {
+                vscode.window.showErrorMessage(err.message);
+              }
+            );
+          },
+          (err) => {
+            vscode.window.showErrorMessage(err.message);
+          }
+        );
     }
   );
 
