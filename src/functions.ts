@@ -51,25 +51,35 @@ export function openDailyNote(): (...args: any[]) => any {
 }
 
 /**
- * Creates a daily note file in the specified folder path using a template.
+ * Creates a daily note file in the specified folder path.
  *
- * The function generates a formatted date and file name, retrieves the daily note
- * template from the VS Code workspace configuration, and prepends the current date
- * as a header to the template content. It then creates the file in the specified
- * folder, writes the content to it, and opens the file in the editor.
+ * This function generates a daily note file using a predefined template
+ * and appends the current date as a header at the beginning of the file.
+ * If the folder path or the daily note template is not set, it displays
+ * an error message to the user.
  *
- * @param folderPath - The absolute path to the folder where the daily note file will be created.
+ * @param folderPath - The path to the folder where the daily note will be created.
+ *                     If undefined, an error message will be shown.
  *
  * @remarks
- * - The daily note template is retrieved from the `moment.dailyNoteTemplate` configuration.
- * - If the template is not set, an error message is displayed to the user.
- * - The file is named based on the generated formatted date and file name.
- * - The function uses the VS Code API to create, write, and open the file.
+ * - The daily note template is retrieved from the 'moment.dailyNoteTemplate'
+ *   configuration in the VS Code workspace settings.
+ * - The file is created with the current date as a header, followed by the
+ *   template content.
+ * - After creation, the file is opened in the editor, and a success message
+ *   is displayed. If an error occurs during this process, an error message
+ *   is shown instead.
  *
- * @throws Will display an error message if the daily note template is not set or if
- * there is an issue opening the created file in the editor.
+ * @throws Will display an error message if:
+ * - The folder path is not provided.
+ * - The daily note template is not set in the configuration.
  */
-export function createDailyNote(folderPath: string) {
+export function createDailyNote(folderPath: string | undefined): void {
+  if (!folderPath) {
+    vscode.window.showErrorMessage('Folder path is not set!');
+    return;
+  }
+
   const { formattedDate, fileName } = generateFormattedDateAndFileName();
 
   const fileContent = vscode.workspace
