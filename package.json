@@ -1,0 +1,69 @@
+{
+  "name": "moment",
+  "displayName": "moment",
+  "description": "Taking notes smarter",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "moment.createDailyNote",
+        "title": "Moment: Create Daily Note"
+      },
+      {
+        "command": "moment.viewDailyNote",
+        "title": "Moment: View Daily Note"
+      }
+    ],
+    "configuration": {
+      "title": "Moment",
+      "properties": {
+        "moment.dailyNoteTemplate": {
+          "type": "string",
+          "default": "## Tasks\n\nQuick tasks for today:\n- [ ] Task 1\n\n## Things Learned\n\nKey learnings and insights from today:\n- \n\n## Problems Encountered\n\nChallenges and issues faced:\n- \n",
+          "description": "Template for daily notes."
+        },
+        "moment.dailyNotesPath": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Specifies the folder path containing the daily notes."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.98.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "eslint": "^9.21.0",
+    "typescript": "^5.7.3",
+    "ts-loader": "^9.5.2",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
