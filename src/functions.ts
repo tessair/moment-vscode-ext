@@ -2,18 +2,17 @@ import * as vscode from 'vscode';
 import { generateFormattedDateAndFileName } from './utils';
 
 /**
- * Opens the daily note file in the editor based on the configured daily notes path
- * and the current date. If the daily notes path is not set, an error message is displayed.
+ * Opens the daily note file for the current date in the configured daily notes folder.
  *
- * The function retrieves the daily notes path from the `moment.dailyNotesPath` configuration,
- * generates the formatted date and file name, and attempts to open the corresponding file.
- * If successful, the file is displayed in the editor, and a success message is shown.
- * If any errors occur during the process, appropriate error messages are displayed.
+ * This function retrieves the folder path for daily notes from the user's configuration
+ * and attempts to open the daily note file for the current date. If the file does not exist,
+ * it triggers the creation of the daily note and reopens it. If the folder path is not set,
+ * an error message is displayed to the user.
  *
- * @returns A function that performs the operation of opening the daily note.
+ * @returns A function that, when executed, performs the operation of opening the daily note.
  *
- * @throws Will display an error message if the daily notes path is not set or if
- *         there are issues opening the file.
+ * @throws Will display an error message if the daily notes path is not configured.
+ * @throws Will display an error message if there is an issue opening the daily note file.
  */
 export function openDailyNote(): (...args: any[]) => any {
   return () => {
@@ -43,8 +42,9 @@ export function openDailyNote(): (...args: any[]) => any {
             }
           );
         },
-        (err) => {
-          vscode.window.showErrorMessage(err.message);
+        () => {
+          manageDailyNoteCreation()();
+          openDailyNote()();
         }
       );
   };
