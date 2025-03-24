@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { generateFormattedDateAndFileName } from './utils';
+import { openDailyNote } from './functions';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -133,41 +134,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(viewNoteCommandHandle);
-}
-
-function openDailyNote(): (...args: any[]) => any {
-  return () => {
-    const folderPath = vscode.workspace
-      .getConfiguration('moment')
-      .get('dailyNotesPath') as string | undefined;
-
-    if (!folderPath) {
-      vscode.window.showErrorMessage('Daily notes path is not set!');
-      return;
-    }
-
-    const { formattedDate, fileName } = generateFormattedDateAndFileName();
-
-    vscode.workspace
-      .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
-      .then(
-        (doc) => {
-          vscode.window.showTextDocument(doc).then(
-            () => {
-              vscode.window.showInformationMessage(
-                `Viewing daily note for ${formattedDate}`
-              );
-            },
-            (err) => {
-              vscode.window.showErrorMessage(err.message);
-            }
-          );
-        },
-        (err) => {
-          vscode.window.showErrorMessage(err.message);
-        }
-      );
-  };
 }
 
 // This method is called when your extension is deactivated
