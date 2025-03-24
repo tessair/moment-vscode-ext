@@ -117,3 +117,54 @@ export function createDailyNote(folderPath: string | undefined): void {
       );
     });
 }
+
+/**
+ * Manages the creation of a daily note file in a specified folder.
+ *
+ * This function retrieves the folder path for daily notes from the user's
+ * VS Code configuration. If the folder path is not set, it prompts the user
+ * to input a folder path, updates the configuration, and creates the daily note
+ * in the specified folder. If the folder path is already set, it directly creates
+ * the daily note in the configured folder.
+ *
+ * @returns A function that, when executed, handles the daily note creation process.
+ */
+export function manageDailyNoteCreation(): (...args: any[]) => any {
+  return () => {
+    let folderPath = vscode.workspace
+      .getConfiguration('moment')
+      .get('dailyNotesPath') as string | undefined;
+
+    if (!folderPath) {
+      // get the current workspace folder path
+      folderPath = vscode.workspace.workspaceFolders
+        ? vscode.workspace.workspaceFolders[0].uri.path
+        : '';
+      vscode.window
+        .showInputBox({
+          prompt: 'Enter the folder path where you want to save the file',
+          value: folderPath,
+        })
+        .then((folderPathInput) => {
+          if (folderPathInput) {
+            folderPath = folderPathInput;
+
+            // update the configuration with the new folder path
+            vscode.workspace
+              .getConfiguration('moment')
+              .update('dailyNotesPath', folderPath, true)
+              .then(
+                () => {
+                  createDailyNote(folderPath);
+                },
+                (err) => {
+                  vscode.window.showErrorMessage(err.message);
+                }
+              );
+          }
+        });
+    } else {
+      createDailyNote(folderPath);
+    }
+  };
+}
