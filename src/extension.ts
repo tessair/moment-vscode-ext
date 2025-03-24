@@ -20,12 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
       // }
 
       // create a new .md file that will have as name the current date in the format DD-MM-YYYY
-      const date = new Date();
-      const formattedDate = `${String(date.getDate()).padStart(
-        2,
-        '0'
-      )}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
-      const fileName = `${formattedDate}.md`;
+      const { formattedDate, fileName } = generateFormattedDateAndFileName();
 
       // read the daily note template from the extension configuration
 
@@ -73,6 +68,15 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(viewNoteCommandHandle);
+}
+
+function generateFormattedDateAndFileName() {
+  const date = new Date();
+  const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(
+    date.getMonth() + 1
+  ).padStart(2, '0')}-${date.getFullYear()}`;
+  const fileName = `${formattedDate}.md`;
+  return { formattedDate, fileName };
 }
 
 // This method is called when your extension is deactivated
