@@ -130,9 +130,7 @@ export function activate(context: vscode.ExtensionContext) {
   const viewNoteCommandHandle = vscode.commands.registerCommand(
     'moment.viewDailyNote',
     () => {
-      // get the folder path from the configuration
       const folderPath = vscode.workspace
-
         .getConfiguration('moment')
         .get('dailyNotesPath') as string | undefined;
 
@@ -143,7 +141,6 @@ export function activate(context: vscode.ExtensionContext) {
 
       const { formattedDate, fileName } = generateFormattedDateAndFileName();
 
-      // open the file
       vscode.workspace
         .openTextDocument(vscode.Uri.parse(`${folderPath}/${fileName}`))
         .then(
