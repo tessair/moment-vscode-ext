@@ -9,7 +9,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onView:todolist"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -20,6 +22,14 @@
       {
         "command": "moment.viewDailyNote",
         "title": "Moment: View Daily Note"
+      },
+      {
+        "command": "todo.add",
+        "title": "Add Todo"
+      },
+      {
+        "command": "todo.toggle",
+        "title": "Toggle Todo Completion"
       }
     ],
     "configuration": {
@@ -40,6 +50,14 @@
           "description": "Specifies the folder path containing the daily notes."
         }
       }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "todoList",
+          "name": "Todo List"
+        }
+      ]
     }
   },
   "scripts": {
