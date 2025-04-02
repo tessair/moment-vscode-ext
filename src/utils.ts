@@ -107,25 +107,3 @@ export function updateTreeView() {
     treeDataProvider: todoTreeProvider,
   });
 }
-
-/**
- * Toggles the completion status of a todo item at the specified index.
- * If the todo item is marked as completed (`- [x]`), it will be updated to not completed (`- [ ]`),
- * and vice versa.
- *
- * @param todoIndex - The index of the todo item in the `todoData` array to toggle.
- *
- * Side Effects:
- * - Updates the `todoData` array with the modified todo item.
- * - Calls `saveTodos()` to persist the changes.
- * - Calls `updateTreeView()` to refresh the UI representation of the todos.
- */
-export function toggleTodoCompletion(todoIndex: number) {
-  const line = todoData[todoIndex];
-  const updatedLine = line.startsWith('- [x]')
-    ? line.replace('- [x]', '- [ ]')
-    : line.replace('- [ ]', '- [x]');
-  todoData[todoIndex] = updatedLine;
-  saveTodos();
-  updateTreeView();
-}

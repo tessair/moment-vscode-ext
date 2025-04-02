@@ -26,10 +26,6 @@
       {
         "command": "moment.add",
         "title": "Moment: Add Todo"
-      },
-      {
-        "command": "moment.toggle",
-        "title": "Moment: Toggle Todo Completion"
       }
     ],
     "configuration": {

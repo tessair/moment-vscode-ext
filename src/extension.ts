@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { manageDailyNoteCreation, openDailyNote } from './functions';
-import { manageTodoAdd, manageTodoListToggle } from './tree';
+import { manageTodoAdd } from './tree';
 import { loadTodos, updateTreeView } from './utils';
 
 // This method is called when your extension is activated
@@ -25,18 +25,12 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(createNoteCommandHandle, viewNoteCommandHandle);
-
-  const todoToggleCommandHandle = vscode.commands.registerCommand(
-    'moment.toggle',
-    manageTodoListToggle()
-  );
-
   const todoAddCommandHandle = vscode.commands.registerCommand(
     'moment.add',
     manageTodoAdd()
   );
 
-  context.subscriptions.push(todoToggleCommandHandle, todoAddCommandHandle);
+  context.subscriptions.push(todoAddCommandHandle);
 }
 
 // This method is called when your extension is deactivated
