@@ -8,9 +8,9 @@ import { loadTodos, updateTreeView } from './utils';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-   // Load todos on activation
-   loadTodos();
-   updateTreeView();
+  // Load todos on activation
+  loadTodos();
+  updateTreeView();
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
@@ -26,14 +26,18 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(createNoteCommandHandle, viewNoteCommandHandle);
 
-  // Register the tree view provider
-  let todoToggleCommandHandle = vscode.commands.registerCommand('todo.toggle', manageTodoListToggle());
+  const todoToggleCommandHandle = vscode.commands.registerCommand(
+    'moment.toggle',
+    manageTodoListToggle()
+  );
 
-  // Command to add a new todo
-  let todoAddCommandHandle = vscode.commands.registerCommand('todo.add', manageTodoAdd());
+  const todoAddCommandHandle = vscode.commands.registerCommand(
+    'moment.add',
+    manageTodoAdd()
+  );
 
   context.subscriptions.push(todoToggleCommandHandle, todoAddCommandHandle);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {}
