@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import { TodoTreeDataProvider } from './TodoTreeDataProvider';
 
 export let todoTreeView: vscode.TreeView<any> | undefined;
 export let todoData: string[] = [];
@@ -41,22 +42,18 @@ export function saveTodos() {
 
 // This function updates the TreeView
 export function updateTreeView() {
-  const todoItems = todoData.map((todo) => ({
-    label: todo,
-    collapsibleState: vscode.TreeItemCollapsibleState.None,
-  }));
+  const todoItems = todoData.map(
+    (todo) => new vscode.TreeItem(todo, vscode.TreeItemCollapsibleState.None)
+  );
 
-  const todoTree = new vscode.TreeDataProvider<any>({
-    getChildren: () => todoItems,
-    getTreeItem: (item) => item,
-  });
+  const todoTreeProvider = new TodoTreeDataProvider(todoItems);
 
   if (todoTreeView) {
     todoTreeView.dispose();
   }
 
   todoTreeView = vscode.window.createTreeView('todoList', {
-    treeDataProvider: todoTree,
+    treeDataProvider: todoTreeProvider,
   });
 }
 
