@@ -24,12 +24,12 @@
         "title": "Moment: View Daily Note"
       },
       {
-        "command": "todo.add",
-        "title": "Add Todo"
+        "command": "moment.add",
+        "title": "Moment: Add Todo"
       },
       {
-        "command": "todo.toggle",
-        "title": "Toggle Todo Completion"
+        "command": "moment.toggle",
+        "title": "Moment: Toggle Todo Completion"
       }
     ],
     "configuration": {
