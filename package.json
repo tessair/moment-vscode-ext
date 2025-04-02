@@ -55,7 +55,8 @@
       "explorer": [
         {
           "id": "todoList",
-          "name": "Todo List"
+          "name": "Todo List",
+          "icon": "todo.svg"
         }
       ]
     }
