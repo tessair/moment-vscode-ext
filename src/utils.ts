@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { TodoTreeDataProvider } from './TodoTreeDataProvider';
 
 export let todoTreeView: vscode.TreeView<any> | undefined;
 export let todoData: string[] = [];
@@ -77,33 +76,4 @@ export function saveTodos() {
   const filePath = path.join(workspaceRoot, 'todos.md');
   const content = todoData.join('\n');
   fs.writeFileSync(filePath, content, 'utf-8');
-}
-
-/**
- * Updates the Tree View for the "todoList" in the VS Code extension.
- *
- * This function creates a new `TodoTreeDataProvider` using the current `todoData`,
- * maps the data into `TreeItem` objects, and assigns it to the Tree View. If a
- * previous instance of the Tree View exists, it disposes of it before creating a new one.
- *
- * @remarks
- * - Each `todo` item is represented as a `TreeItem` with no collapsible state.
- * - The Tree View is identified by the ID 'todoList'.
- *
- * @throws Will dispose of the existing Tree View if it is already initialized.
- */
-export function updateTreeView() {
-  const todoItems = todoData.map(
-    (todo) => new vscode.TreeItem(todo, vscode.TreeItemCollapsibleState.None)
-  );
-
-  const todoTreeProvider = new TodoTreeDataProvider(todoItems);
-
-  if (todoTreeView) {
-    todoTreeView.dispose();
-  }
-
-  todoTreeView = vscode.window.createTreeView('todoList', {
-    treeDataProvider: todoTreeProvider,
-  });
 }

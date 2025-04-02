@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:todolist"
+    "onView:todolist",
+    "onView:momentView"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -47,12 +48,20 @@
         }
       }
     },
-    "views": {
-      "explorer": [
+    "viewsContainers": {
+      "activitybar": [
         {
-          "id": "todoList",
-          "name": "Todo List",
-          "icon": "todo.svg"
+          "id": "momentBar",
+          "title": "Moment",
+          "icon": "resources/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "momentBar": [
+        {
+          "id": "momentView",
+          "name": "Todo List"
         }
       ]
     }

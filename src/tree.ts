@@ -1,4 +1,4 @@
-import { saveTodos, todoData, updateTreeView } from './utils';
+import { saveTodos, todoData } from './utils';
 import * as vscode from 'vscode';
 
 /**
@@ -16,7 +16,6 @@ export function manageTodoAdd(): (...args: any[]) => any {
       if (input) {
         todoData.push(`- [ ] ${input}`);
         saveTodos();
-        updateTreeView();
       }
     });
   };
