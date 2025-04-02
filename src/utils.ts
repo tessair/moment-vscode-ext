@@ -22,6 +22,16 @@ export function generateFormattedDateAndFileName() {
   return { formattedDate, fileName };
 }
 
+function getWorkspaceRoot(): string | undefined {
+  if (
+    !vscode.workspace.workspaceFolders ||
+    vscode.workspace.workspaceFolders.length === 0
+  ) {
+    return undefined;
+  }
+  return vscode.workspace.workspaceFolders[0].uri.fsPath;
+}
+
 /**
  * Loads the TODO items from a `todos.md` file located in the root of the current workspace.
  *
@@ -36,7 +46,12 @@ export function generateFormattedDateAndFileName() {
  * @throws Will throw an error if the file exists but cannot be read.
  */
 export function loadTodos() {
-  const filePath = path.join(vscode.workspace.rootPath || '', 'todos.md');
+  const workspaceRoot = getWorkspaceRoot();
+  if (!workspaceRoot) {
+    todoData = [];
+    return;
+  }
+  const filePath = path.join(workspaceRoot, 'todos.md');
   if (fs.existsSync(filePath)) {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     todoData = fileContent.split('\n').filter((line) => line.startsWith('- ['));
@@ -55,7 +70,11 @@ export function loadTodos() {
  * @throws {Error} If there is an issue writing to the file.
  */
 export function saveTodos() {
-  const filePath = path.join(vscode.workspace.rootPath || '', 'todos.md');
+  const workspaceRoot = getWorkspaceRoot();
+  if (!workspaceRoot) {
+    throw new Error('Workspace root path is not set.');
+  }
+  const filePath = path.join(workspaceRoot, 'todos.md');
   const content = todoData.join('\n');
   fs.writeFileSync(filePath, content, 'utf-8');
 }
