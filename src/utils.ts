@@ -25,10 +25,10 @@ export function generateFormattedDateAndFileName() {
 export function loadTodos() {
   const filePath = path.join(vscode.workspace.rootPath || '', 'todos.md');
   if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      todoData = fileContent.split('\n').filter(line => line.startsWith('- ['));
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    todoData = fileContent.split('\n').filter((line) => line.startsWith('- ['));
   } else {
-      todoData = [];
+    todoData = [];
   }
 }
 
@@ -41,29 +41,31 @@ export function saveTodos() {
 
 // This function updates the TreeView
 export function updateTreeView() {
-  const todoItems = todoData.map(todo => ({
-      label: todo,
-      collapsibleState: vscode.TreeItemCollapsibleState.None
+  const todoItems = todoData.map((todo) => ({
+    label: todo,
+    collapsibleState: vscode.TreeItemCollapsibleState.None,
   }));
 
   const todoTree = new vscode.TreeDataProvider<any>({
-      getChildren: () => todoItems,
-      getTreeItem: (item) => item
+    getChildren: () => todoItems,
+    getTreeItem: (item) => item,
   });
 
   if (todoTreeView) {
-      todoTreeView.dispose();
+    todoTreeView.dispose();
   }
 
   todoTreeView = vscode.window.createTreeView('todoList', {
-      treeDataProvider: todoTree
+    treeDataProvider: todoTree,
   });
 }
 
 // This command toggles the completion of a todo item
 export function toggleTodoCompletion(todoIndex: number) {
   const line = todoData[todoIndex];
-  const updatedLine = line.startsWith('- [x]') ? line.replace('- [x]', '- [ ]') : line.replace('- [ ]', '- [x]');
+  const updatedLine = line.startsWith('- [x]')
+    ? line.replace('- [x]', '- [ ]')
+    : line.replace('- [ ]', '- [x]');
   todoData[todoIndex] = updatedLine;
   saveTodos();
   updateTreeView();
